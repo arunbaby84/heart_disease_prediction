@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../LLMs_For_GenAI/Assignments/Medical_Journals_Assistant"
+		},
+		{
+			"path": "../Heart_Diseases_Prediction"
+		}
+	],
+	"settings": {
+		"python-envs.defaultEnvManager": "ms-python.python:system"
+	}
+}

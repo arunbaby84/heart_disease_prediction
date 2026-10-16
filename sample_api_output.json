@@ -1,0 +1,9 @@
+{
+  "status_code": 200,
+  "body": {
+    "prediction": 0,
+    "confidence": 0.24146682313219395,
+    "risk_probability": 0.24146682313219395,
+    "status": "success"
+  }
+}
