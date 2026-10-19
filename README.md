@@ -60,6 +60,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+If this project was moved from another folder or computer and the virtual environment points to an old `C:\Users\...` path, recreate it from the project directory in PowerShell:
+
+```powershell
+deactivate 2>$null
+Remove-Item -Recurse -Force .venv
+py -3.12 -m venv .venv
+& .\.venv\Scripts\python.exe -m pip install --upgrade pip
+& .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
 3. Download the raw dataset:
 
 ```bash
@@ -76,6 +86,12 @@ python scripts/preprocess_data.py
 
 ```bash
 python scripts/train_model.py
+```
+
+On Windows PowerShell, use the project environment explicitly:
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/train_model.py
 ```
 
 6. Open the MLflow tracking UI locally:
@@ -190,3 +206,4 @@ Contributions are welcome. Please use a feature branch, keep tests passing, and 
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
+docker build -t myapp:latest
