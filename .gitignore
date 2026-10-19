@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env.*
+
+# Local ML artifacts
+artifacts/
+mlruns/
+*.joblib
+*.pkl
+
+# Data files
+*.csv
+!data/.gitkeep
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Logs
+*.log
+pytest_output.txt
