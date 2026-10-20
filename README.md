@@ -178,7 +178,7 @@ print(prediction)
 
 ## Containerized local stack
 
-For a full local MLOps stack, use Docker Compose to run the tracking server and prediction API together:
+For the local MLOps and monitoring stack, use Docker Compose:
 
 ```bash
 docker compose up --build
@@ -188,8 +188,10 @@ This starts:
 
 - MLflow UI at http://localhost:5000
 - FastAPI prediction service at http://localhost:8000
+- Prometheus metrics at http://localhost:9090
+- Grafana dashboard at http://localhost:3000 (default local login: `admin` / `admin`)
 
-The Compose file is defined in [docker-compose.yml](docker-compose.yml).
+The API exports Prometheus metrics at `/metrics` and writes one JSON log per request to stdout, including request ID, method, path, status code, and duration. View logs with `docker compose logs -f api`. Grafana provisions the Prometheus datasource and the API monitoring dashboard automatically. Set `GRAFANA_ADMIN_PASSWORD` before starting the stack to override the local default password. Compose configuration is in [compose.yaml](compose.yaml).
 
 ## CI/CD and deployment
 

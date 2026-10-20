@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import logging
+import json
 import sys
+import time
+import uuid
 from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -19,6 +23,32 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Heart Disease Prediction API", version="1.0.0")
 MODEL_PATH = Path(__file__).resolve().parents[1] / "artifacts" / "best_model.joblib"
+Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
+
+
+@app.middleware("http")
+async def log_api_request(request, call_next):
+    request_id = request.headers.get("x-request-id") or uuid.uuid4().hex
+    started_at = time.perf_counter()
+    status_code = 500
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+        response.headers["X-Request-ID"] = request_id
+        return response
+    finally:
+        logger.info(
+            json.dumps(
+                {
+                    "event": "api_request",
+                    "request_id": request_id,
+                    "method": request.method,
+                    "path": request.url.path,
+                    "status_code": status_code,
+                    "duration_ms": round((time.perf_counter() - started_at) * 1000, 2),
+                }
+            )
+        )
 
 
 class HeartInput(BaseModel):

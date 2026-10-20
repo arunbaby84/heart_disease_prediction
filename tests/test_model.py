@@ -11,8 +11,6 @@ from src.model_pipeline import (
     make_splits,
     predict_record,
 )
-
-
 def test_model_pipeline_trains_and_predicts():
     raw = pd.DataFrame(
         [
