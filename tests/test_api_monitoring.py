@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from fastapi.testclient import TestClient
 
@@ -9,6 +10,7 @@ from app.main import app
 
 def test_api_exposes_prometheus_metrics_and_logs_request(caplog):
     request_id = "monitoring-test-123"
+    caplog.set_level(logging.INFO, logger="app.main")
     client = TestClient(app)
 
     response = client.get("/health", headers={"X-Request-ID": request_id})
