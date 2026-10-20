@@ -94,10 +94,12 @@ On Windows PowerShell, use the project environment explicitly:
 & .\.venv\Scripts\python.exe scripts/train_model.py
 ```
 
-6. Open the MLflow tracking UI locally:
+Training writes experiment runs to the repository's `mlruns/` directory. The existing `heart_disease_prediction` experiment and its runs are retained there. If you use a remote MLflow server, set `MLFLOW_TRACKING_URI` before training.
+
+6. Open the MLflow tracking UI locally, using the same store as training:
 
 ```powershell
-& .\.venv\Scripts\python.exe -m mlflow ui --host 127.0.0.1 --port 5000
+& .\.venv\Scripts\python.exe -m mlflow ui --backend-store-uri .\mlruns --host 127.0.0.1 --port 5000
 ```
 
 Then open http://127.0.0.1:5000 in your browser to inspect runs, metrics, and model artifacts.
@@ -197,7 +199,7 @@ The Compose file is defined in [docker-compose.yml](docker-compose.yml).
 - Docker packaging is defined in [Dockerfile](Dockerfile)
 - Docker Compose local stack is defined in [docker-compose.yml](docker-compose.yml)
 - Kubernetes deployment is defined in [k8s/deployment.yaml](k8s/deployment.yaml)
-- Report documentation is in [docs/report.md](docs/report.md)
+- Assignment report: [PDF](docs/heart_disease_mlops_report.pdf), [source](docs/report.md). Regenerate it with `python docs/generate_report.py`.
 
 ## Contributing
 

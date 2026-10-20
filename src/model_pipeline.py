@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -212,7 +213,8 @@ def train_and_evaluate() -> tuple[str, Pipeline, dict[str, Any]]:
     with open(REPORT_PATH, "w", encoding="utf-8") as file:
         json.dump({name: details["metrics"] for name, details in run_records.items()}, file, indent=2)
 
-    mlflow.set_tracking_uri((ROOT_DIR / "mlruns").as_uri())
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", (ROOT_DIR / "mlruns").as_uri())
+    mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment("heart_disease_prediction")
 
     for name, details in run_records.items():
