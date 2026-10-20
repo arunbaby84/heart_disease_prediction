@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import src.model_pipeline as model_pipeline
 
 from src.model_pipeline import (
     FEATURE_COLUMNS,
@@ -60,6 +61,31 @@ def test_load_heart_data_handles_missing_values_and_binary_target(tmp_path):
     df = load_heart_data(csv_path)
     assert list(df.columns) == FEATURE_COLUMNS + ["target"]
     assert df["target"].isin([0, 1]).all()
+    assert df.isna().sum().sum() == 0
+
+
+def test_load_heart_data_preprocesses_raw_file_when_processed_file_is_missing(tmp_path, monkeypatch):
+    raw = pd.DataFrame(
+        [
+            [52, 1, 0, 125, 212, 0, 1, 168, 0, 1.0, 2, 2, 3, 1],
+            [58, 0, 2, 140, 211, 0, 0, 165, 0, 2.5, 1, 1, 7, 0],
+            [49, 1, 3, 130, 266, 0, 1, 171, 0, 0.6, 2, 0, 6, 1],
+            [60, 1, 1, 145, 282, 0, 0, 142, 1, 2.8, 2, 2, 3, 1],
+        ],
+        columns=FEATURE_COLUMNS + ["target"],
+    )
+    raw_path = tmp_path / "raw.csv"
+    processed_path = tmp_path / "generated" / "processed.csv"
+    requested_path = tmp_path / "missing.csv"
+    raw.to_csv(raw_path, index=False)
+    monkeypatch.setattr(model_pipeline, "DATA_PATH", raw_path)
+    monkeypatch.setattr(model_pipeline, "PROCESSED_DATA_PATH", processed_path)
+
+    df = load_heart_data(requested_path)
+
+    assert processed_path.exists()
+    assert list(df.columns) == FEATURE_COLUMNS + ["target"]
+    assert len(df) == len(raw)
     assert df.isna().sum().sum() == 0
 
 
